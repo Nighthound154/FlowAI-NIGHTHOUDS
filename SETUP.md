@@ -67,7 +67,7 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5000
 
 ### Frontend (.env.local file)
 ```
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=http://flowai-nighthounds.onrender.com/api
 ```
 
 ---
