@@ -28,7 +28,7 @@ const Register = () => {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page + ' glass fadeIn'}>
       <div className={styles.card}>
         <div className={styles.logoRow}>
           <div className={styles.logoIcon}>F</div>

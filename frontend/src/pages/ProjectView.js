@@ -49,13 +49,18 @@ const ProjectView = () => {
   ];
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page + ' glass fadeIn'}>
       <div className={styles.topBar}>
         <button className={styles.backBtn} onClick={() => navigate('/dashboard')}>← Dashboard</button>
         <span className={styles.date}>{new Date(project.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
       </div>
 
       <div className={styles.hero}>
+        {project.image_url && (
+          <div className={styles.heroImage}>
+            <img src={project.image_url} alt={project.title} onError={(e) => { e.target.style.display = 'none'; }} />
+          </div>
+        )}
         <div className={styles.heroBadge}>Execution Plan</div>
         <h1 className={styles.heroTitle}>{project.title}</h1>
         <p className={styles.heroIdea}>{project.idea}</p>

@@ -3,6 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const db = require('./db');
 
 const authRoutes = require('./routes/auth');
 const flowaiRoutes = require('./routes/flowai');
@@ -26,6 +27,17 @@ app.use(rateLimit({
 }));
 
 app.set('trust proxy', 1);
+
+// Health check database connection 
+app.use(async (req, res, next) => {
+  try {
+    await db.query('SELECT NOW()');
+    next();
+  } catch (err) {
+    console.error('DB connection error:', err.message);
+    res.status(503).json({ error: 'Database connection failed' });
+  }
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api', flowaiRoutes);

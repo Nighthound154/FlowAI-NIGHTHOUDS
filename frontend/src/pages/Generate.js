@@ -161,21 +161,34 @@ const Generate = () => {
     setLoading(true);
     setStepIndex(1);
 
-    // Simulate step progression while waiting
+    // Faster step progression (completion-based)
     const stepTimer = setInterval(() => {
-      setStepIndex(prev => prev < 4 ? prev + 1 : prev);
-    }, 5000);
+      setStepIndex(prev => prev < 5 ? prev + 1 : prev);
+    }, 2500);  // Reduced from 5000 to 2500ms
 
     try {
+      console.log('📤 Sending generation request...');
       const res = await api.post('/generate', { idea });
+      console.log('📥 Generation response received:', res.data);
       clearInterval(stepTimer);
       setStepIndex(5);
-      setResults(res.data.results);
+      
+      // Ensure results is an object with all expected modules
+      const results = res.data.results || {};
+      if (Object.keys(results).length === 0) {
+        console.warn('⚠️ No results returned from server');
+        setError('Generation completed but returned no data. Please try again.');
+        return;
+      }
+      
+      setResults(results);
       setProject(res.data.project);
     } catch (err) {
       clearInterval(stepTimer);
       setStepIndex(0);
-      setError(err.response?.data?.error || 'Generation failed. Please try again.');
+      const errorMsg = err.response?.data?.error || err.message || 'Generation failed. Please try again.';
+      console.error('❌ Generation error:', errorMsg);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -184,7 +197,7 @@ const Generate = () => {
   const reset = () => { setIdea(''); setResults(null); setProject(null); setError(''); setStepIndex(0); };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page + ' glass fadeIn'}>
       {!results ? (
         <div className={styles.inputSection}>
           <div className={styles.inputHeader}>
@@ -216,16 +229,51 @@ const Generate = () => {
           {error && <div className={styles.errorBox}>{error}</div>}
 
           {loading && (
-            <div className={styles.pipeline}>
-              {STEPS.map((s, i) => (
-                <React.Fragment key={s}>
-                  <div className={`${styles.pStep} ${i < stepIndex ? styles.done : i === stepIndex ? styles.active : ''}`}>
-                    <div className={styles.pDot}>{i < stepIndex ? '✓' : i + 1}</div>
-                    <span className={styles.pLabel}>{s}</span>
-                  </div>
-                  {i < STEPS.length - 1 && <div className={styles.pArrow} />}
-                </React.Fragment>
-              ))}
+            <div style={{ textAlign: 'center', marginTop: 40 }}>
+              {/* Display generated image while loading */}
+              <div style={{ marginBottom: 32, animation: 'fadeInUp 0.6s ease-out' }}>
+                <div style={{
+                  width: '100%',
+                  maxWidth: 500,
+                  height: 300,
+                  borderRadius: 16,
+                  overflow: 'hidden',
+                  marginBottom: 24,
+                  border: '2px solid var(--amber)',
+                  boxShadow: '0 8px 32px rgba(255, 179, 0, 0.2)',
+                  background: 'var(--bg2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <div style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: '50%',
+                    border: '4px solid var(--amber)',
+                    borderTopColor: 'transparent',
+                    animation: 'spin 1s linear infinite'
+                  }} />
+                </div>
+                <h3 style={{ color: 'var(--amber)', marginBottom: 8, fontSize: 18, fontFamily: 'var(--font-display)', fontWeight: 700 }}>
+                  ✦ Generating Your Execution Plan
+                </h3>
+                <p style={{ color: 'var(--text2)', fontSize: 14 }}>
+                  Creating personalized strategy with AI-powered insights...
+                </p>
+              </div>
+              
+              <div className={styles.pipeline}>
+                {STEPS.map((s, i) => (
+                  <React.Fragment key={s}>
+                    <div className={`${styles.pStep} ${i < stepIndex ? styles.done : i === stepIndex ? styles.active : ''}`}>
+                      <div className={styles.pDot}>{i < stepIndex ? '✓' : i + 1}</div>
+                      <span className={styles.pLabel}>{s}</span>
+                    </div>
+                    {i < STEPS.length - 1 && <div className={styles.pArrow} />}
+                  </React.Fragment>
+                ))}
+              </div>
             </div>
           )}
 
@@ -242,6 +290,32 @@ const Generate = () => {
         </div>
       ) : (
         <div className={styles.resultsSection}>
+          {/* Display Project Image */}
+          {project?.image_url && (
+            <div style={{
+              width: '100%',
+              maxWidth: 800,
+              margin: '0 auto 32px',
+              borderRadius: 20,
+              overflow: 'hidden',
+              border: '2px solid var(--amber)',
+              boxShadow: '0 12px 40px rgba(255, 179, 0, 0.2)',
+              animation: 'fadeInUp 0.6s cubic-bezier(0.23, 1.01, 0.32, 1)'
+            }}>
+              <img
+                src={project.image_url}
+                alt={project?.title}
+                style={{
+                  width: '100%',
+                  height: 400,
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            </div>
+          )}
+          
           <div className={styles.resultsHeader}>
             <div>
               <h2 className={styles.resultTitle}>{project?.title}</h2>

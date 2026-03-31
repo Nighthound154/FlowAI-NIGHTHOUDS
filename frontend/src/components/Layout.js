@@ -51,7 +51,7 @@ const Layout = () => {
         </div>
       </aside>
 
-      <main className={styles.main}>
+      <main className={styles.main + ' fadeIn'}>
         <Outlet />
       </main>
     </div>

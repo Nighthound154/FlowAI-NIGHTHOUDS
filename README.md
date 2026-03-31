@@ -12,7 +12,7 @@
 | Frontend | React 18, React Router v6, CSS Modules |
 | Backend | Node.js, Express 4 |
 | Database | PostgreSQL |
-| AI | Anthropic Claude API |
+| AI | OpenRouter.io (Multiple Models: GPT-4o, Claude, etc.) |
 | Auth | JWT (7-day tokens) |
 | Process Manager | PM2 (cluster mode) |
 | Web Server | Nginx (reverse proxy + SSL) |
@@ -70,7 +70,7 @@ flowai/
 ### Prerequisites
 - Node.js 20+
 - PostgreSQL 14+
-- An Anthropic API key (get one at console.anthropic.com)
+- An OpenRouter API key (get one at https://openrouter.ai)
 
 ### 1. Database
 ```bash

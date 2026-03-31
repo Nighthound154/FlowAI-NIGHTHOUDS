@@ -33,7 +33,7 @@ const Dashboard = () => {
   const formatDate = (iso) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page + ' glass fadeIn'}>
       <div className={styles.header}>
         <div>
           <h1 className={styles.heading}>
@@ -87,6 +87,11 @@ const Dashboard = () => {
         <div className={styles.grid}>
           {projects.map((p, i) => (
             <Link to={`/projects/${p.id}`} key={p.id} className={styles.projectCard} style={{ animationDelay: `${i * 0.05}s` }}>
+              {p.image_url && (
+                <div className={styles.cardImage}>
+                  <img src={p.image_url} alt={p.title} onError={(e) => { e.target.style.display = 'none'; }} />
+                </div>
+              )}
               <div className={styles.cardTop}>
                 <div className={styles.cardMeta}>
                   <span className={styles.cardDate}>{formatDate(p.created_at)}</span>

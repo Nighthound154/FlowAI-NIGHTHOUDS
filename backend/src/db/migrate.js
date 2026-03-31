@@ -31,10 +31,15 @@ const migrate = async () => {
         user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
         idea TEXT NOT NULL,
-        status VARCHAR(20) DEFAULT 'completed' CHECK (status IN ('pending','processing','completed','failed')),
+        image_url TEXT,
+        status VARCHAR(20) DEFAULT 'completed' CHECK (status IN ('pending','processing','generating','completed','failed')),
         created_at TIMESTAMPTZ DEFAULT NOW(),
         updated_at TIMESTAMPTZ DEFAULT NOW()
       );
+    `);
+
+    await client.query(`
+      ALTER TABLE projects ADD COLUMN IF NOT EXISTS image_url TEXT;
     `);
 
     await client.query(`

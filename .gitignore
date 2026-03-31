@@ -10,3 +10,34 @@ build/
 .idea/
 *.swp
 *.swo
+# Secrets - NEVER commit credentials
+secrets.json
+.secrets.json
+private.key
+*.pem
+*.key
+
+# ngrok/tunnel files
+.ngrok*
+
+# IDE
+Thumbs.db
+*~
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# OS
+.env.production.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary
+tmp/
+temp/
+*.tmp

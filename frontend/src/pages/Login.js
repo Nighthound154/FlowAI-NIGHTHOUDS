@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page + ' glass fadeIn'}>
       <div className={styles.card} style={{ animationDelay: '0s' }}>
         <div className={styles.logoRow}>
           <div className={styles.logoIcon}>F</div>
